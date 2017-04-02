@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import sys
 from enum import Enum
 
 class Filter(Enum):
@@ -197,6 +198,8 @@ def RMDS(f,g):
 
     return eps
 
-enhance('arara.jpg', 0.8, 0.7, 0.3, 1)
+# enhance('arara.jpg', 0.8, 0.7, 0.3, 1)
 # enhance('nap.jpg', 0.8, 0.7, 0.3, 0)
 # enhance('cameraman.png', 0.8, 0.7, 0.3, 0)
+
+enhance(sys.argv[1], float(sys.argv[2]), float(sys.argv[3]), float(sys.argv[4]),int(sys.argv[5]))
