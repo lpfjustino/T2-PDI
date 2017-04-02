@@ -78,27 +78,27 @@ def imEqualHist(f):
     # plt.clf()
     '''
 
-    hist = myHist(f_array, 255)
+    hist = imHistogram(f_array, 255)
     hist = myCumHist(hist)
-    plt.plot(range(255), hist, "r--", linewidth=1)
-    #plt.show()
 
+    t = 0
     for i in range(len(f_array)):
         val = int(f_array[i])
-        factor = (L/(M*N))*hist[val]
-        f_array[i] *= factor
+        factor = ((L-1)/(M*N))*hist[val]
+        t += factor
+        f_array[i] = factor
 
     enh_img = f_array.reshape(M, N)
     enh_img = cv2.convertScaleAbs(enh_img)
     enh_img = cv2.normalize(enh_img, enh_img, 0, 255, cv2.NORM_MINMAX)
 
+    print(enh_img)
+    print(t/(M*N))
     return enh_img
 
-def myHist(array, n_bins):
-    min = np.min(array)
-    max = np.max(array)
 
-    hist = np.zeros(n_bins)
+def imHistogram(array, n_bins):
+    hist = np.zeros(n_bins, dtype=int)
 
     for element in array:
         idx = math.floor(element)
@@ -106,13 +106,17 @@ def myHist(array, n_bins):
 
     return hist
 
+
 def myCumHist(array):
     return np.cumsum(array)
 
-# def imSharp(f,y):
-# def imHistogram(f):
-# def showHistogram(h):
 
-enhance('arara.jpg', 1.25, 0.7, 0.3, 1)
+# def imSharp(f,y):
+
+def showHistogram(h):
+    plt.plot(range(255), h, "r--", linewidth=1)
+    plt.show()
+
+enhance('arara.jpg', 0.8, 0.7, 0.3, 1)
 #enhance('nap.jpg', 1.25, 0.7, 0.3, 1)
 #enhance('cameraman.png', 1.25, 0.7, 0.3, 1)
