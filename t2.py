@@ -33,6 +33,9 @@ def enhance(filename, gamma, a, b, imshow):
     hist_enhanced = imEqualHist(img_f)
     enhanced_images.append(hist_enhanced)
 
+    sharp_enhanced = imSharp(img_f, (a,b))
+    enhanced_images.append(sharp_enhanced)
+
     print("RMDS")
     for i, e_img in enumerate(enhanced_images):
         # Skip the source image
@@ -92,7 +95,35 @@ def imEqualHist(f):
 
 
 # Applies the Sharpening filter to a given image f
-# def imSharp(f,y):
+def imSharp(f,y):
+    # Filter
+    w = np.array([0.05, 0.1, 0.05, 0.1, 0.4, 0.1, 0.05, 0.1, 0.05])
+
+    # Image with borders in order to make it easier to apply the filter
+    b_f = cv2.copyMakeBorder(f, 1, 1, 1, 1, cv2.BORDER_REPLICATE)
+
+    # Coordinates of the outer edges
+    bottom_edge = b_f.shape[0]
+    right_edge = b_f.shape[1]
+
+    # Applying the filter
+    b_xy = np.ndarray(f.shape)
+    for (i, j), v in np.ndenumerate(b_f):
+        # Skip borders
+        if i==0 or i==bottom_edge-1 or j==0 or j==right_edge-1:
+            continue
+
+        z = b_f[i-1:i+2, j-1:j+2].flatten()
+        b_xy[i-1,j-1] = np.dot(z, w)
+
+    a = y[0]
+    b = y[1]
+
+    enh_img = cv2.multiply(f, a) + cv2.multiply(cv2.subtract(b,f), b)
+    enh_img = cv2.convertScaleAbs(enh_img)
+    enh_img = cv2.normalize(enh_img, enh_img, 0, 255, cv2.NORM_MINMAX)
+
+    return enh_img
 
 
 # Personal implementation of the histogram algorithm given an array
@@ -166,6 +197,6 @@ def RMDS(f,g):
 
     return eps
 
-enhance('arara.jpg', 0.8, 0.7, 0.3, 0)
+enhance('arara.jpg', 0.8, 0.7, 0.3, 1)
 # enhance('nap.jpg', 0.8, 0.7, 0.3, 0)
 # enhance('cameraman.png', 0.8, 0.7, 0.3, 0)
