@@ -107,8 +107,18 @@ def imHistogram(array, n_bins):
     return hist
 
 
-def myCumHist(array):
-    return np.cumsum(array)
+def myCumHist(h):
+    ch = []
+    ch.append(h[0])
+
+    for i in range(len(h)-1):
+        i += 1
+        ch.append(ch[i-1] + h[i])
+
+    return ch
+
+    # np cumsum
+    #return np.cumsum(array)
 
 
 # def imSharp(f,y):
