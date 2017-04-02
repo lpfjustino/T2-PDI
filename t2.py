@@ -5,7 +5,13 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+from enum import Enum
 
+class Filter(Enum):
+    L = 1
+    G = 2
+    H = 3
+    S = 4
 
 def enhance(filename, gamma, a, b, imshow):
     img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
@@ -27,10 +33,12 @@ def enhance(filename, gamma, a, b, imshow):
     hist_enhanced = imEqualHist(img_f)
     enhanced_images.append(hist_enhanced)
 
-
-
-    # showHistogram(imHistogram(img_f))
-    # showHistogram(imHistogram(hist_enhanced))
+    print("RMDS")
+    for i, e_img in enumerate(enhanced_images):
+        # Skip the source image
+        if i == 0:
+            continue
+        print(Filter(i).name,"=",RMDS(img, e_img))
 
     # Shows images and their respective histograms if requested
     if imshow:
@@ -137,6 +145,27 @@ def show_histograms(imgs):
     for img in imgs:
         showHistogram(imHistogram(img))
 
-enhance('arara.jpg', 0.8, 0.7, 0.3, 1)
-enhance('nap.jpg', 0.8, 0.7, 0.3, 1)
-enhance('cameraman.png', 0.8, 0.7, 0.3, 1)
+
+def RMDS(f,g):
+    # Ignore the error that says overflow error mays happen
+    np.seterr(all='ignore')
+
+    eps = 0
+
+    array_f = f.flatten()
+    array_g = g.flatten()
+
+    MN = array_f.shape[0]
+
+    for i, _ in enumerate(array_f):
+        eps += (array_f[i] - array_g[i])
+
+
+    eps /= float(MN)
+    eps = np.sqrt(eps)
+
+    return eps
+
+enhance('arara.jpg', 0.8, 0.7, 0.3, 0)
+# enhance('nap.jpg', 0.8, 0.7, 0.3, 0)
+# enhance('cameraman.png', 0.8, 0.7, 0.3, 0)
