@@ -42,7 +42,7 @@ def enhance(filename, gamma, a, b, imshow):
         # Skip the source image
         if i == 0:
             continue
-        print(Filter(i).name,"=",RMDS(img, e_img))
+        print(Filter(i).name,"=","%0.4f" % RMDS(img, e_img))
 
     # Shows images and their respective histograms if requested
     if imshow:
@@ -198,7 +198,7 @@ def RMDS(f,g):
 
     return eps
 
-# enhance('arara.jpg', 0.8, 0.7, 0.3, 1)
+# enhance('arara.jpg', 0.8, 0.7, 0.3, 0)
 # enhance('nap.jpg', 0.8, 0.7, 0.3, 0)
 # enhance('cameraman.png', 0.8, 0.7, 0.3, 0)
 
