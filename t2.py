@@ -65,9 +65,11 @@ def imLog(g):
 
 # Applies the Gamma filter to a given image f
 def imGamma(f, y):
-    enh_img = cv2.pow(f, y)
+    enh_img = np.divide(f, 255)
+    enh_img = cv2.pow(enh_img, y)
+    enh_img = np.multiply(enh_img, 255)
     enh_img = cv2.convertScaleAbs(enh_img)
-    enh_img = cv2.normalize(enh_img, enh_img, 0, 255, cv2.NORM_MINMAX)
+    #enh_img = cv2.normalize(enh_img, enh_img, 0, 255, cv2.NORM_MINMAX)
     return enh_img
 
 
@@ -198,8 +200,8 @@ def RMDS(f,g):
 
     return eps
 
-# enhance('arara.jpg', 0.8, 0.7, 0.3, 0)
-# enhance('nap.jpg', 0.8, 0.7, 0.3, 0)
-# enhance('cameraman.png', 0.8, 0.7, 0.3, 0)
+#enhance('arara.jpg', 0.5, 0.7, 0.3, 1)
+#enhance('nap.jpg', 0.5, 0.7, 0.3, 1)
+#enhance('cameraman.png', 0.5, 0.7, 0.3, 1)
 
 enhance(sys.argv[1], float(sys.argv[2]), float(sys.argv[3]), float(sys.argv[4]),int(sys.argv[5]))
